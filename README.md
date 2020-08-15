@@ -19,12 +19,17 @@ The structure of a project with `secrets` is shown below
 
 > Caution: Never upload this `password` file
 
-Each Project may contain some sensitive informations. It is not a good idea to expose them, hence encrypt it based on your password.
+Each project may contain some sensitive information's. It is not a good idea to expose them, hence encrypt it based on your password.
 
-A project may contain some secrets. The secrets needs to be first stored in a file named `secrets` in the project directory.
+The secrets needs to be first stored in a file named `secrets` in the project directory.
 A secret will be a key-value pair based as shown below
 ```python
 key1=value1
 key2=value2
 ```
-Copy the `secrets.template` in the project directory as `secrets` and add your secrets in there. After that run the `secure.py` file to secure your secrets.
+Copy the `secrets.template` in the project directory as `secrets` and add your secrets in there. Run the below piece of code to encrypt the `secrets`.
+```python
+from commons import secure, common
+_, project_name = common.get_project_dir_name()
+secure.secure_secrets(project_name)
+```

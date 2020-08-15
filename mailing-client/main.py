@@ -7,8 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
-from commons import secure
-from commons import common
+from commons import secure, common
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
