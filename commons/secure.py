@@ -1,20 +1,23 @@
 import os
 import base64
+import logging
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
 
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
-def get_project_root_directory():
+
+def _get_project_root_directory():
     dirname, _ = os.path.split(os.path.abspath("__file__"))
     root_dir = os.path.dirname(dirname)
     return root_dir
 
 
-def read_key():
-    root_dir = get_project_root_directory()
+def _read_key():
+    root_dir = _get_project_root_directory()
     password_file = os.path.join(root_dir, "password")
     if not os.path.exists(password_file):
         raise FileNotFoundError("password file not found in the project's root directory")
@@ -26,7 +29,7 @@ def read_key():
         return password
 
 
-def get_key(password):
+def _get_key(password):
     password = password.encode()  # convert the string password to bytes
     salt = b'\x8f\x7fDN\x1d*\xda\x06Gff-\xf2\xf8\x13\x00'  # generate a salt using os.random(16)
     kdf = PBKDF2HMAC(
@@ -40,7 +43,7 @@ def get_key(password):
     return key
 
 
-def encrypt_file(password, filename):
+def _encrypt_file(password, filename):
     if not os.path.exists(filename):
         _, _filename = os.path.split(filename + ".enc")
         if _filename.endswith(".enc"):
@@ -54,7 +57,7 @@ def encrypt_file(password, filename):
         print("an encrypted file with the same name '{0}', is already present".format(_filename))
         return
 
-    key = get_key(password=password)
+    key = _get_key(password=password)
     with open(filename, 'rb') as file:
         data = file.read()
 
@@ -68,11 +71,11 @@ def encrypt_file(password, filename):
         os.remove(filename)
 
 
-def decrypt_file(password, filename):
+def _decrypt_file(password, filename):
     if not os.path.exists(filename):
         raise FileNotFoundError("{0} not exists".format(filename))
 
-    key = get_key(password=password)
+    key = _get_key(password=password)
     with open(filename, 'rb') as file:
         data = file.read()
 
@@ -89,8 +92,8 @@ def decrypt_file(password, filename):
 
 
 def secure_secrets(project_name):
-    password = read_key()
-    root_dir = get_project_root_directory()
+    password = _read_key()
+    root_dir = _get_project_root_directory()
     project_dir = os.path.join(root_dir, project_name)
     if not os.path.exists(project_dir):
         raise FileNotFoundError("project do not exist")
@@ -105,16 +108,16 @@ def secure_secrets(project_name):
             raise FileNotFoundError("secrets file not found in the project")
 
     if secrets_path != secrets_enc_path:
-        encrypt_file(password=password, filename=secrets_path)
+        _encrypt_file(password=password, filename=secrets_path)
         # secrets_path = '{}.enc'.format(secrets_path)
-        print("secured the secrets")
+        logging.info("secured the secrets")
     else:
-        print("secrets is already secured")
+        logging.info("secrets is already secured")
 
 
 def read_secrets(project_name):
-    password = read_key()
-    root_dir = get_project_root_directory()
+    password = _read_key()
+    root_dir = _get_project_root_directory()
     project_dir = os.path.join(root_dir, project_name)
     if not os.path.exists(project_dir):
         raise FileNotFoundError("project do not exist")
@@ -127,7 +130,7 @@ def read_secrets(project_name):
         else:
             raise RuntimeError("no secrets found")
 
-    return decrypt_file(password=password, filename=secrets_enc_path)
+    return _decrypt_file(password=password, filename=secrets_enc_path)
 
 
 if __name__ == "__main__":
