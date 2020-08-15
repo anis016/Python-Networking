@@ -1,0 +1,6 @@
+Hello World
+
+This is a mail sent with Python.
+
+Kind Regards
+Me
