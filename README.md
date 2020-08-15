@@ -8,6 +8,7 @@ The structure of a project with `secrets` is shown below
 .
 ├── commons
 │   ├── __init__.py
+│   ├── common.py
 │   └── secure.py
 ├── project-directory
 │   ├── __init__.py
