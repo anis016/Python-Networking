@@ -9,7 +9,6 @@ from email.mime.multipart import MIMEMultipart
 
 from commons import secure, common
 
-logger = logging.getLogger(__name__)
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 server = None
@@ -38,7 +37,7 @@ def login_to_server():
         server = smtplib.SMTP_SSL(gmail_server, gmail_ssl_port, context=context)
         server.ehlo()  # can be omitted
         server.login(user=from_mail, password=password)
-        logging.info("logged in success")
+        logging.info("login is success")
     except Exception as exception:
         print(exception)
 

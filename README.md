@@ -34,3 +34,10 @@ from commons import secure, common
 _, project_name = common.get_project_dir_name()
 secure.secure_secrets(project_name)
 ```
+
+## Project
+* [Sending Email via GMail](https://github.com/anis016/Python-Networking/tree/master/mailing-client)
+* [DDOS](https://github.com/anis016/Python-Networking/tree/master/ddos)
+* [Fast Port Scanner](https://github.com/anis016/Python-Networking/tree/master/port-scanner)
+
+Project idea taken from: https://www.neuralnine.com/blog/

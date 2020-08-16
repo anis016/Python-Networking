@@ -3,3 +3,4 @@ password
 secrets
 secrets.enc
 __pycache__
+/ddos/vagrants/.vagrant/

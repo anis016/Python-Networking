@@ -7,6 +7,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
 
+DEBUG = False
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 
@@ -47,14 +48,16 @@ def _encrypt_file(password, filename):
     if not os.path.exists(filename):
         _, _filename = os.path.split(filename + ".enc")
         if _filename.endswith(".enc"):
-            print("{0} is already encrypted".format(_filename))
+            if DEBUG:
+                print("{0} is already encrypted".format(_filename))
             return
         raise FileNotFoundError("{0} not exists".format(filename))
 
     _dirname, _filename = os.path.split(filename)
     _filename = _filename + '.enc'
     if os.path.exists(os.path.join(_dirname, _filename)):
-        print("an encrypted file with the same name '{0}', is already present".format(_filename))
+        if DEBUG:
+            print("an encrypted file with the same name '{0}', is already present".format(_filename))
         return
 
     key = _get_key(password=password)
@@ -110,9 +113,11 @@ def secure_secrets(project_name):
     if secrets_path != secrets_enc_path:
         _encrypt_file(password=password, filename=secrets_path)
         # secrets_path = '{}.enc'.format(secrets_path)
-        logging.info("secured the secrets")
+        if DEBUG:
+            logging.info("secured the secrets")
     else:
-        logging.info("secrets is already secured")
+        if DEBUG:
+            logging.info("secrets is already secured")
 
 
 def read_secrets(project_name):
